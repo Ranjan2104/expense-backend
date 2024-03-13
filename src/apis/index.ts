@@ -9,11 +9,11 @@ export function mount(app: Application): void {
 }
 
 const defaultRoute = (req: Request, res: Response) => {
-	let _retData = UtilsHelper.responseObject();
+	let _resData = UtilsHelper.responseObject();
 
-	_.assign(_retData, {
+	_.assign(_resData, {
 		msg: "Node backend API is running ..."
 	});
 
-	return UtilsHelper.cRes(res, _retData);
+	return UtilsHelper.cRes(res, _resData);
 }

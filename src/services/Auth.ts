@@ -12,7 +12,7 @@ export async function verifyToken(
   res: express.Response,
   next: express.NextFunction
 ) {
-  const _retData: IResponseObject = UtilsHelper.responseObject();
+  const _resData: IResponseObject = UtilsHelper.responseObject();
   try {
     let token: any =
       req.headers.Authorization ||
@@ -20,13 +20,13 @@ export async function verifyToken(
       req.headers["x-access-token"];
 
     if (!token) {
-      _.assign(_retData, {
+      _.assign(_resData, {
         msgCode: "512",
         msg: getMessage("512", "en"),
         status: "error",
         statusCode: 403,
       });
-      return UtilsHelper.cRes(res, _retData);
+      return UtilsHelper.cRes(res, _resData);
     }
 
     const tokenArr = token.split(" ");
@@ -38,23 +38,23 @@ export async function verifyToken(
       status: { $ne: 9 },
     });
     if (!user) {
-      _.assign(_retData, {
+      _.assign(_resData, {
         msgCode: "542",
         msg: getMessage("542", "en"),
         status: "error",
         statusCode: 403,
       });
-      return UtilsHelper.cRes(res, _retData);
+      return UtilsHelper.cRes(res, _resData);
     }
 
     next();
   } catch (err: any) {
-    _.assign(_retData, {
+    _.assign(_resData, {
       statusCode: 500,
       status: "error",
       msg: err.message,
     });
-    return UtilsHelper.cRes(res, _retData);
+    return UtilsHelper.cRes(res, _resData);
   }
 }
 
@@ -64,18 +64,18 @@ export async function verifyAuthToken(
   res: express.Response,
   next: express.NextFunction
 ) {
-  const _retData: IResponseObject = UtilsHelper.responseObject();
+  const _resData: IResponseObject = UtilsHelper.responseObject();
   try {
     next();
   } catch (err: any) {
     let _msg: string;
      _msg = "Invalid Access token.";
-    _.assign(_retData, {
+    _.assign(_resData, {
       statusCode: 403,
       status: "error",
       msg: _msg,
     });
-    return UtilsHelper.cRes(res, _retData);
+    return UtilsHelper.cRes(res, _resData);
   }
 }
 

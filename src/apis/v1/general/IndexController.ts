@@ -4,10 +4,8 @@ import { IResponseObject } from "../../../helpers/utils.interface";
 import BaseController from '../../../helpers/BaseController';
 import _ from 'lodash';
 import * as Model from "../../../models"
-
 import getMessage from '../../../i18';
 
-import { number } from 'joi';
 class IndexController extends BaseController {
 
 	constructor() {
@@ -20,18 +18,18 @@ class IndexController extends BaseController {
 	 * getResponse
 	 */
 	public async getResponse(req: express.Request, res: express.Response): Promise<void | any>  {
-		const _retData: IResponseObject = UtilsHelper.responseObject();
+		const _resData: IResponseObject = UtilsHelper.responseObject();
 		try {
 			
 			 
-			_.assign(_retData, {
+			_.assign(_resData, {
 				data: null,
 				msg: getMessage("1000", "en"),
 				msgCode: 1000
 			})
 		}
 		catch (err: any) {
-			_.assign(_retData, {
+			_.assign(_resData, {
 				statusCode: 500,
 				status: "error",
 				msg: err.message
@@ -39,7 +37,7 @@ class IndexController extends BaseController {
 
 			this.logErrors(err, "Error in IndexController.getQuote");
 		}
-		return this.sendResponse(res, _retData);
+		return this.sendResponse(res, _resData);
 	}
 
 }

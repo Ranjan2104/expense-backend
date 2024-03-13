@@ -9,9 +9,9 @@ const port: number = parseInt(process.env.PORT as string, 10) || 8000;
 const {createServer} = require('http');
 
 app.set("port", port);
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "templates"));
-app.use(express.static("templates"));
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "templates"));
+// app.use(express.static("templates"));
 
 
 const corsOption = {

@@ -4,65 +4,79 @@ import { IResponseObject } from "../../../helpers/utils.interface";
 import BaseController from '../../../helpers/BaseController';
 import _ from 'lodash';
 import getMessage from "../../../i18";
+import * as Model from "../../../models"
+import bcrypt from 'bcrypt'
+
 class AuthController extends BaseController {
 
 	constructor() {
 		super();
 
-		// bind all the methods here
-		this.register = this.register.bind(this);
+		this.addUser = this.addUser.bind(this);
 		this.login = this.login.bind(this);
+
 
 	}
 
-
- 
-
-	/*
-	 * Method to register user
-	 */
-
-	public async register(req: express.Request, res: express.Response): Promise<void | any> {
-		const _retData: IResponseObject = UtilsHelper.responseObject();
+	public async addUser(req: express.Request, res: express.Response): Promise<void | any> {
+		const _resData: IResponseObject = UtilsHelper.responseObject();
 		try {
-			const reqBody = req.body
 
-			const _data = "";
+			await Model.User.create(req.body)
 
-			_.assign(_retData, {
-				data: _data,
-				msgCode: "103",
-				msg: getMessage("103", "en")
+			_.assign(_resData, {
+				data: null,
+				msgCode: "1001",
+				msg: getMessage("1001", "en")
 			})
 
 		} catch (err: any) {
 			console.log(err)
-			_.assign(_retData, {
+			_.assign(_resData, {
 				statusCode: 500,
 				status: "error",
 				msg: err.message
 			});
 
-			this.logErrors(err, "Error in AuthController.register");
+			this.logErrors(err, "Error in AuthController.addUser");
 		}
 
-		return this.sendResponse(res, _retData);
+		return this.sendResponse(res, _resData);
 	}
- 
- 
 
-	/*
-	 * Method to login user
-	 */
 	public async login(req: express.Request, res: express.Response): Promise<void | any> {
-		const _retData: IResponseObject = UtilsHelper.responseObject();
+		const _resData: IResponseObject = UtilsHelper.responseObject();
 		try {
-			const reqBody = req.body
 
-		}
-		catch (err: any) {
+			const user = await Model.User.findOne({mobileNo: req.body.mobileNo}, { password: 1 }).lean();
+
+			if(!user) {
+				_.assign(_resData, {
+					statusCode: 404,
+					status: "error",
+					data: null,
+					msgCode: "1002",
+					msg: getMessage("1002", "en")
+				})
+			}else if(user.password && ( await bcrypt.compare(req.body.password, user.password.toString()) ) ){
+				_.assign(_resData, {
+					data: null,
+					msgCode: "1003",
+					msg: getMessage("1003", "en")
+				})
+			}else {
+				_.assign(_resData, {
+					statusCode: 401,
+					status: "error",
+					data: null,
+					msgCode: "1004",
+					msg: getMessage("1004", "en")
+				})
+			}
+			
+		} catch (err: any) {
 			console.log(err)
-			_.assign(_retData, {
+			_.assign(_resData, {
 				statusCode: 500,
 				status: "error",
 				msg: err.message
@@ -70,7 +84,8 @@ class AuthController extends BaseController {
 
 			this.logErrors(err, "Error in AuthController.login");
 		}
-		return this.sendResponse(res, _retData);
+
+		return this.sendResponse(res, _resData);
 	}
  
 }

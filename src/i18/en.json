@@ -1,3 +1,8 @@
 {
-  "1000":"Api is working fine."
+  "1000": "Api is working fine.",
+  "1001": "User added successfully.",
+  "1002": "User not found.",
+  "1003": "User logged In.",
+  "1004": "Wrong Creds."
+
 }

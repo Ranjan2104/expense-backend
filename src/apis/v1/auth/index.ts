@@ -5,10 +5,14 @@ import Validator from "./validators";
 const _router: Router = Router();
 
 const _openRoutes = function () {
- 
-	 _router.post('/register', Validator("userRegisterValidation"), authController.register);
 
-	 _router.post('/login', Validator("loginValidation"), authController.login);
+	/* 
+		/v1/auth
+	*/ 
+ 
+	 _router.post('/add-user', Validator("addUserValid"), authController.addUser);
+
+	 _router.post('/login', Validator("loginValid"), authController.login);
 
 
 };

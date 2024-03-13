@@ -8,16 +8,18 @@ import getMessage from "../../../i18";
 
 const Validators: any = {
 
-  userRegisterValidation: Joi.object({
-   
-  }),
-
- 
-
-  loginValidation: Joi.object({
-    
+  addUserValid: Joi.object({
+    firstName: Joi.string().required().custom(UtilsHelper.JoiCheckValidName),
+    lastName: Joi.string().required().custom(UtilsHelper.JoiCheckValidName),
+    mobileNo: Joi.string().required().custom(UtilsHelper.JoiCheckValidMobile),
+    email: Joi.string().required().custom(UtilsHelper.JoiCheckValidEmail),
+    password: Joi.string().required().custom(UtilsHelper.JoiCheckValidPassword),
   }),
  
+  loginValid: Joi.object({
+    mobileNo: Joi.string().required().custom(UtilsHelper.JoiCheckValidMobile),
+    password: Joi.string().required().custom(UtilsHelper.JoiCheckValidPassword),
+  }),
 };
 
 export default function Validator(func: string) {
@@ -41,14 +43,14 @@ export default function Validator(func: string) {
         });
       }
 
-      let _retData = UtilsHelper.responseObject();
-      _retData.status = "error";
-      _retData.statusCode = 400;
-      _retData.msg = getMessage("511", "en");
-      _retData.msgCode = "511";
-      _retData.data = _er;
+      let _resData = UtilsHelper.responseObject();
+      _resData.status = "error";
+      _resData.statusCode = 400;
+      _resData.msg = getMessage("511", "en");
+      _resData.msgCode = "511";
+      _resData.data = _er;
 
-      return UtilsHelper.cRes(res, _retData);
+      return UtilsHelper.cRes(res, _resData);
     }
   };
 }

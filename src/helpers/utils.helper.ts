@@ -113,7 +113,6 @@
 import { Response } from "express";
 import { IResponseObject } from "./utils.interface";
 import { isValidObjectId } from "mongoose";
-import fs from 'fs'
 import * as utils from "node:util"
 
 import { CustomValidator} from "joi";
@@ -206,6 +205,39 @@ const logObj = function(data: any, depth = 5) {
 	console.log(utils.inspect(data, false, depth));
 }
 
+const JoiCheckValidName = (value: any): CustomValidator<any> => {
+	let regex = /^[A-Za-z\s\-']+$/;
+	if(regex.test(value)) {
+		return value;
+	}
+	throw new Error(`Invalid name provided.`)
+}
+
+const JoiCheckValidMobile = (value: any): CustomValidator<any> => {
+	let regex = /^[6-9]\d{9}$/
+	if(regex.test(value)) {
+		return value;
+	}
+	throw new Error(`Invalid mobile number provided.`)
+}
+
+const JoiCheckValidEmail = (value: any): CustomValidator<any> => {
+	let regex = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/
+	if(regex.test(value)) {
+		return value;
+	}
+	throw new Error(`Invalid email provided.`)
+}
+
+const JoiCheckValidPassword = (value: any): CustomValidator<any> => {
+	let regex = /^\d{6}$/
+	if(regex.test(value)) {
+		return value;
+	}
+	throw new Error(`Invalid password type provided.`)
+}
+
+
 
 
 export {
@@ -219,4 +251,8 @@ export {
 	getNewObjectId,
 	Round,
 	logObj,
+	JoiCheckValidName,
+	JoiCheckValidMobile,
+	JoiCheckValidEmail,
+	JoiCheckValidPassword
 }

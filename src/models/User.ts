@@ -1,17 +1,31 @@
 import { Schema, model } from "mongoose";
 import { IUser } from "./interfaces";
+import bcrypt from 'bcrypt'
 
-// Free User schema corresponding to the document interface.
-const BatchSchema = new Schema<IUser>(
+const userSchema = new Schema<IUser>(
   {
-    name: { type: String}
+    firstName: { type: String, trim: true, required: true },
+    lastName: { type: String, trim: true },
+    mobileNo: { type: String, trim: true, required: true, unique: true },
+    email: { type: String, trim: true, required: true, unique: true},
+    password: { type: String, trim: true, required: true },
   },
   {
     timestamps: true,
   }
 );
 
-// Creating a Model.
-const User = model<IUser>("User", BatchSchema, "User");
+userSchema.pre('save', async function  (next) {
+
+	if (this.isModified('password')) {
+
+		this.password = await bcrypt.hash(this.password.toString(), 10);
+
+	} else {
+		next();
+	}
+});
+
+const User = model<IUser>("User", userSchema, "User");
 
 export default User;
